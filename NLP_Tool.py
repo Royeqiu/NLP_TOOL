@@ -12,6 +12,21 @@ class NLP_Tool:
             self.nlp = spacy.load('en_core_web_sm')
         self.load_stop_word()
 
+    def cal_idf(self,corpus):
+        total_count = len(corpus)
+        word_set = set()
+        word_count_dict = dict()
+        for sentence in corpus:
+            for word in sentence:
+                word_set.add(word)
+
+        for word in word_set:
+            word_count_dict[word] = 0
+            for sentence in corpus:
+                if word in sentence:
+                    word_count_dict[word] += 1
+            word_count_dict[word] = math.log(total_count / word_count_dict[word])
+        return word_count_dict
 
     def load_stop_word(self):
         for word in self.nlp.Defaults.stop_words:
