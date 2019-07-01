@@ -3,14 +3,48 @@ import re
 import numpy as np
 import math
 from spacy.tokens import Doc
+from pyhanlp import *
+
+
 class NLP_Tool:
 
-    def __init__(self,load_lg_corpus = True):
+    def __init__(self, load_lg_corpus = True, load_spacy_model = True, load_hanlp_model = False, enable_hanlp_ner = False, load_jieba = False, load_bert_model = False):
+        if load_spacy_model:
+            self.nlp = self.load_spacy(load_lg_corpus)
+            self.load_stop_word()
+        if load_hanlp_model:
+            self.hanlp = self.load_hanlp(enable_hanlp_ner)
+        if load_jieba:
+            self.jieba = self.load_jieba()
+        if load_bert_model:
+            self.bert = self.load_bert()
+
+    def get_bert_vec(self,sentences):
+
+        return self.bert(sentences)
+
+    def load_bert(self):
+        from bert_embedding import BertEmbedding
+        bert = BertEmbedding(model='bert_12_768_12', dataset_name='wiki_cn_cased')
+        return bert
+
+    def load_hanlp(self,enable_ner = False):
+
+        hanlp = HanLP.newSegment().enableNameRecognize(enable_ner)
+
+        return hanlp
+
+    def load_spacy(self,load_lg_corpus = True):
         if load_lg_corpus:
-            self.nlp = spacy.load('en_core_web_lg')
+            nlp = spacy.load('en_core_web_lg')
         else:
-            self.nlp = spacy.load('en_core_web_sm')
-        self.load_stop_word()
+            nlp = spacy.load('en_core_web_sm')
+        return nlp
+
+    def load_jieba(self):
+        import jieba
+
+        return jieba
 
     def cal_idf(self,corpus):
         total_count = len(corpus)
@@ -77,9 +111,6 @@ class NLP_Tool:
     def get_arc_similarity(self,vec1,vec2):
         return (1 - math.acos(self.get_cos_similarity(vec1, vec2)) / math.pi)
 
-    def get_euclidean_distance(self, vec1, vec2):
-
-        return
 
     def get_phrase_vector(self,text):
         avg_total_vector=np.zeros((300), dtype='f')
@@ -122,6 +153,9 @@ class NLP_Tool:
         else:
             return avg_vector/len(vectors)
 
+    def find_index(self, term, sentence):
+        base_index = sentence.index(term)
+        return base_index, base_index + len(term)
 
 
 class WhitespaceTokenizer(object):
