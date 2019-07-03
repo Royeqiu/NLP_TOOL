@@ -1,0 +1,1 @@
+BERT_VEC_LENG = 768

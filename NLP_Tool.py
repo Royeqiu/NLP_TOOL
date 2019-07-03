@@ -4,7 +4,7 @@ import numpy as np
 import math
 from spacy.tokens import Doc
 from pyhanlp import *
-
+from NLP_TOOL import NLP_Tool_Constant as CONST
 
 class NLP_Tool:
 
@@ -153,10 +153,18 @@ class NLP_Tool:
         else:
             return avg_vector/len(vectors)
 
-    def find_index(self, term, sentence):
-        base_index = sentence.index(term)
-        return base_index, base_index + len(term)
+    def get_index(self, term, sentence,skip_space = True):
 
+        base_index = sentence.index(term)
+        skipped_space_count = 0
+        if skip_space:
+            pre_sentence = sentence[0:base_index]
+            skipped_space_count = len(pre_sentence.split(' '))-1
+
+        return base_index-skipped_space_count, base_index + len(term) - skipped_space_count
+
+    def bert_embedding(self,sentences):
+        return self.bert(sentences)
 
 class WhitespaceTokenizer(object):
     def __init__(self, vocab):
