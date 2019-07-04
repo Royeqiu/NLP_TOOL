@@ -4,6 +4,7 @@ import numpy as np
 import math
 from spacy.tokens import Doc
 from pyhanlp import *
+import os
 from NLP_TOOL import NLP_Tool_Constant as CONST
 
 class NLP_Tool:
@@ -13,9 +14,13 @@ class NLP_Tool:
             self.nlp = self.load_spacy(load_lg_corpus)
             self.load_stop_word()
         if load_hanlp_model:
+            self.ch_stop_word_list = []
             self.hanlp = self.load_hanlp(enable_hanlp_ner)
         if load_jieba:
+            self.ch_stop_word_list = []
             self.jieba = self.load_jieba()
+        if load_jieba or load_hanlp_model:
+            self.load_ch_stop_word()
         if load_bert_model:
             self.bert = self.load_bert()
 
@@ -67,6 +72,11 @@ class NLP_Tool:
             lex = self.nlp.vocab[word]
             lex.is_stop = True
 
+    def load_ch_stop_word(self):
+        stop_word_file = open(str(os.getcwd())+'/NLP_Tool/traditional_chinese_stop_word.txt','r',encoding='utf-8')
+        for term in stop_word_file:
+            self.ch_stop_word_list.append(term.strip())
+        stop_word_file.close()
     def tokenize_sentence(self, sentence):
         return [word.strip() for word in re.split('(\W+)?', sentence) if word.strip()]
 
