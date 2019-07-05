@@ -73,7 +73,7 @@ class NLP_Tool:
             lex.is_stop = True
 
     def load_ch_stop_word(self):
-        stop_word_file = open(str(os.getcwd())+'/NLP_Tool/traditional_chinese_stop_word.txt','r',encoding='utf-8')
+        stop_word_file = open(str(os.path.dirname(__file__))+'/traditional_chinese_stop_word.txt','r',encoding='utf-8')
         for term in stop_word_file:
             self.ch_stop_word_list.append(term.strip())
         stop_word_file.close()
@@ -81,7 +81,7 @@ class NLP_Tool:
         return [word.strip() for word in re.split('(\W+)?', sentence) if word.strip()]
 
     def remove_punctuation(self, text):
-        mypunctuation = '!"#$&\'()*+-/:;<=>?@[\\]^_`{|}~*½'
+        mypunctuation = '!"#$&\'()*+-/:;<=>?@[\\]^_`{|}~*½。，.'
         regex = re.compile('[%s]' % re.escape(mypunctuation))
         text = regex.sub('', text)
         return text
