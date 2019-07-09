@@ -140,6 +140,9 @@ class NLP_Tool:
     def is_stop_word(self, word):
         return self.nlp.vocab[word].is_stop
 
+    def is_ch_stop_word(self,word):
+        return word in self.ch_stop_word_list
+    
     def transform_pos(self, pos):
         abbr_pos = ''
         if pos == 'VERB':
