@@ -142,7 +142,7 @@ class NLP_Tool:
 
     def is_ch_stop_word(self,word):
         return word in self.ch_stop_word_list
-    
+
     def transform_pos(self, pos):
         abbr_pos = ''
         if pos == 'VERB':
@@ -178,6 +178,26 @@ class NLP_Tool:
 
     def bert_embedding(self,sentences):
         return self.bert(sentences)
+
+    def build_n_gram_corpus(corpus, n=3):
+        n_gram_list = []
+        for i in range(n):
+            n_gram_list.append([])
+        for sentence in corpus:
+            n_tmp_list = []
+            for i in range(n):
+                n_tmp_list.append([])
+            for term_index, term in enumerate(sentence):
+                n_term = term
+                for window_size in range(1, n):
+                    pointer = term_index + window_size
+                    if pointer >= len(sentence) - 1:
+                        break
+                    n_term += sentence[pointer]
+                    n_tmp_list[window_size - 1].append(n_term)
+            for i in range(n):
+                n_gram_list[i].append(n_tmp_list[i - 1])
+        return n_gram_list
 
 class WhitespaceTokenizer(object):
     def __init__(self, vocab):
