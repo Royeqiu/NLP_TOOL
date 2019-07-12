@@ -179,7 +179,7 @@ class NLP_Tool:
     def bert_embedding(self,sentences):
         return self.bert(sentences)
 
-    def build_n_gram_corpus(corpus, n=3):
+    def build_n_gram_corpus(self,corpus, n=3):
         n_gram_list = []
         for i in range(n):
             n_gram_list.append([])
