@@ -14,10 +14,11 @@ class NLP_Tool:
             self.nlp = self.load_spacy(load_lg_corpus)
             self.load_stop_word()
         if load_hanlp_model:
-            self.ch_stop_word_list = []
+            self.load_ch_stop_word()
             self.hanlp = self.load_hanlp(enable_hanlp_ner)
         if load_jieba:
-            self.ch_stop_word_list = []
+
+            self.load_ch_stop_word()
             self.jieba = self.load_jieba()
         if load_jieba or load_hanlp_model:
             self.load_ch_stop_word()
@@ -30,7 +31,8 @@ class NLP_Tool:
 
     def load_bert(self):
         from bert_embedding import BertEmbedding
-        bert = BertEmbedding(model='bert_12_768_12', dataset_name='wiki_cn_cased')
+        import mxnet as mx
+        bert = BertEmbedding(model='bert_12_768_12', dataset_name='wiki_cn_cased',ctx= mx.gpu(0))
         return bert
 
     def load_hanlp(self,enable_ner = False):
@@ -73,6 +75,7 @@ class NLP_Tool:
             lex.is_stop = True
 
     def load_ch_stop_word(self):
+        self.ch_stop_word_list = []
         stop_word_file = open(str(os.path.dirname(__file__))+'/traditional_chinese_stop_word.txt','r',encoding='utf-8')
         for term in stop_word_file:
             self.ch_stop_word_list.append(term.strip())
@@ -104,6 +107,16 @@ class NLP_Tool:
         doc = self.nlp(text1)
         doc2 = self.nlp(text2)
         return doc.similarity(doc2)
+
+    def turn_to_one_hot(self,corpus, word_to_index):
+        training_tokens_vec = []
+        for tokens in corpus:
+            vec = np.zeros(len(word_to_index))
+            for token in tokens:
+                if token in word_to_index.keys():
+                    vec[word_to_index[token]] = 1
+            training_tokens_vec.append(vec)
+        return training_tokens_vec
 
     def get_cos_similarity(self, vec1, vec2):
         vec1_leng=0
@@ -166,17 +179,17 @@ class NLP_Tool:
         else:
             return avg_vector/len(vectors)
 
-    def get_index(self, term, sentence,skip_space = True):
+    def get_index(self, term, sentence, skip_space=True):
 
         base_index = sentence.index(term)
         skipped_space_count = 0
         if skip_space:
             pre_sentence = sentence[0:base_index]
-            skipped_space_count = len(pre_sentence.split(' '))-1
+            skipped_space_count = len(pre_sentence.split(' ')) - 1
 
-        return base_index-skipped_space_count, base_index + len(term) - skipped_space_count
+        return base_index - skipped_space_count, base_index + len(term) - skipped_space_count
 
-    def bert_embedding(self,sentences):
+    def bert_embedding(self, sentences):
         return self.bert(sentences)
 
     def build_n_gram_corpus(self,corpus, n=3):
@@ -198,6 +211,19 @@ class NLP_Tool:
             for i in range(n):
                 n_gram_list[i].append(n_tmp_list[i - 1])
         return n_gram_list
+
+    def get_index(self, term, sentence,skip_space = True):
+
+        base_index = sentence.index(term)
+        skipped_space_count = 0
+        if skip_space:
+            pre_sentence = sentence[0:base_index]
+            skipped_space_count = len(pre_sentence.split(' '))-1
+
+        return base_index-skipped_space_count, base_index + len(term) - skipped_space_count
+
+    def bert_embedding(self,sentences):
+        return self.bert(sentences)
 
 class WhitespaceTokenizer(object):
     def __init__(self, vocab):
