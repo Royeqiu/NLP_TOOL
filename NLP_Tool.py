@@ -108,6 +108,23 @@ class NLP_Tool:
         doc2 = self.nlp(text2)
         return doc.similarity(doc2)
 
+    def build_word_index(self,corpus, is_padding=False, is_unknown=False):
+        word_set = set()
+        word_to_index = dict()
+        index_to_word = dict()
+        if is_padding:
+            word_set.add('PAD')
+        if is_unknown:
+            word_set.add('UNK')
+
+        for word_list in corpus:
+            for word in word_list:
+                word_set.add(word)
+        for word in word_set:
+            word_to_index[word] = len(word_to_index)
+            index_to_word[len(index_to_word)] = word
+        return word_set, word_to_index, index_to_word
+
     def turn_to_one_hot(self,corpus, word_to_index):
         training_tokens_vec = []
         for tokens in corpus:
@@ -204,12 +221,13 @@ class NLP_Tool:
                 n_term = term
                 for window_size in range(1, n):
                     pointer = term_index + window_size
-                    if pointer >= len(sentence) - 1:
+                    if pointer > len(sentence) - 1:
                         break
                     n_term += sentence[pointer]
                     n_tmp_list[window_size - 1].append(n_term)
             for i in range(n):
                 n_gram_list[i].append(n_tmp_list[i - 1])
+        n_gram_list[0] = corpus
         return n_gram_list
 
     def get_index(self, term, sentence,skip_space = True):
