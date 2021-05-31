@@ -5,9 +5,10 @@ import math
 from spacy.tokens import Doc
 from pyhanlp import *
 import os
-from NLP_TOOL import NLP_Tool_Constant as CONST
-
+import NLP_Tool_Constant as CONST
+from src.bert_util import bert_util
 class NLP_Tool:
+
 
     def __init__(self, load_lg_corpus = True, load_spacy_model = True, load_hanlp_model = False, enable_hanlp_ner = False, load_jieba = False, load_bert_model = False):
         if load_spacy_model:
@@ -24,19 +25,27 @@ class NLP_Tool:
             self.load_ch_stop_word()
         if load_bert_model:
             self.bert = self.load_bert()
+        else:
+            self.bert = None
 
     def get_bert_vec(self,sentences):
-
+        if self.bert is None:
+            self.bert = self.load_bert()
         return self.bert(sentences)
 
+    def get_tokens_bert_vec(self,token,sentence,vec=None):
+        cls_leng = 1
+        start_index,end_index = self.get_index(term=token,sentence=sentence,skip_space=False)
+        if vec is None:
+            vec = self.get_bert_vec(sentence)[0]
+        print(vec.shape)
+        return vec[0][start_index+cls_leng:end_index+cls_leng]
+
     def load_bert(self):
-        from bert_embedding import BertEmbedding
-        import mxnet as mx
-        bert = BertEmbedding(model='bert_12_768_12', dataset_name='wiki_cn_cased',ctx= mx.gpu(0))
+        bert = bert_util()
         return bert
 
     def load_hanlp(self,enable_ner = False):
-
         hanlp = HanLP.newSegment().enableNameRecognize(enable_ner)
 
         return hanlp
@@ -232,6 +241,8 @@ class NLP_Tool:
 
     def get_index(self, term, sentence,skip_space = True):
 
+        if term not in sentence:
+            return -1,-1
         base_index = sentence.index(term)
         skipped_space_count = 0
         if skip_space:

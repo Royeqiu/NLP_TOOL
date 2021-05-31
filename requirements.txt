@@ -1,0 +1,6 @@
+transformers==3.5.1
+hanziconv==0.3.2
+spacy==2.1.4
+jieba==0.39
+numpy==1.19.4
+pyhanlp==0.1.45
