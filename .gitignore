@@ -140,3 +140,7 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+# Data Format
+*.bz2
+*.zip
+*.rar
