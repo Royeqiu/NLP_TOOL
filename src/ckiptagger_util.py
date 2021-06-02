@@ -14,7 +14,8 @@ class Ckiptagger_Util():
 
         entity_sentence_list = self.get_ner_tag(word_sentence_list, pos_sentence_list)
         return (word_sentence_list,pos_sentence_list,entity_sentence_list)
-    def get_word_seg(self, texts, use_delim=False,delim_set={",", "。", ":", "?", "!", ";"}):
+
+    def get_word_seg(self, texts, use_delim=False,delim_set='，,。：:；;！!？?'):
         word_sentence_list = self.ws(texts,  use_delim=use_delim,delim_set=delim_set)
         return word_sentence_list
 
