@@ -115,6 +115,9 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+# Environments
+.venv_low_resource
+venv_low_resoruce/
 
 # Spyder project settings
 .spyderproject
@@ -144,3 +147,4 @@ cython_debug/
 *.bz2
 *.zip
 *.rar
+*.txt
