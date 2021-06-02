@@ -1,2 +1,3 @@
 BERT_VEC_LENG = 768
 HANLP_PEOPLE_TAG = 'nr'
+CKIPTAGGER_MODEL_PATH = './model/ckiptagger/'
