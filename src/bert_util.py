@@ -1,7 +1,7 @@
 from transformers import BertModel,BertTokenizer
 
 
-class bert_util():
+class Bert_Util():
     def __init__(self,tokenizer_path='bert-base-multilingual-uncased',model_path='bert-base-multilingual-uncased'):
         self.bert_tokenizer = BertTokenizer.from_pretrained(tokenizer_path)
         self.bert_model = BertModel.from_pretrained(model_path)

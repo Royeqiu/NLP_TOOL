@@ -3,7 +3,7 @@ from NLP_Tool import NLP_Tool
 nlp_tool = NLP_Tool(load_lg_corpus=False,load_spacy_model=False,load_bert_model=True)
 
 #token embedding in the sentence
-token_vec = print(nlp_tool.get_tokens_bert_vec(term = '飯糰',sentence= '你喜歡吃飯糰嗎',vec=None))
+token_vec = print(nlp_tool.get_tokens_bert_vec(tokens = '飯糰',sentence= '你喜歡吃飯糰嗎',vec=None))
 print(token_vec)
 
 # process multiple sentences

@@ -144,3 +144,4 @@ cython_debug/
 *.bz2
 *.zip
 *.rar
+*.txt

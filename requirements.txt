@@ -1,6 +1,9 @@
-transformers==3.5.1
 hanziconv==0.3.2
-spacy==2.1.4
-jieba==0.39
-numpy==1.19.4
 pyhanlp==0.1.45
+jieba==0.39
+spacy==2.1.4
+ckip_transformers==0.2.4
+opencc_python_reimplemented==0.1.4
+numpy==1.19.4
+transformers==3.5.1
+opencc==1.1.2
