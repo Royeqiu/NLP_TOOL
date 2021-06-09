@@ -5,7 +5,7 @@ import math
 from spacy.tokens import Doc
 import os
 import NLP_Tool_Constant as CONST
-
+from pyhanlp import *
 
 class NLP_Tool:
 
@@ -15,7 +15,6 @@ class NLP_Tool:
             self.nlp = self.load_spacy(load_lg_corpus)
             self.load_stop_word()
         if load_hanlp_model:
-            from pyhanlp import *
             self.load_ch_stop_word()
             self.hanlp = self.load_hanlp(enable_hanlp_ner)
         if load_jieba:

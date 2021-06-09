@@ -15,4 +15,4 @@ if __name__=='__main__':
             if index % 1000==0:
                 print(index)
             concated_str = converter.convert(' '.join(text) + '\n')
-            output.write(concated_str)
+        output.write(concated_str)

@@ -4,15 +4,15 @@ from NLP_Tool_Constant import CKIPTAGGER_MODEL_PATH
 
 
 class Ckiptagger_Util():
-    def __init__(self, sentence_segmentation=False):
+    def __init__(self, sentence_segmentation=False,use_cuda=False):
         model_path = os.path.join(CKIPTAGGER_MODEL_PATH, 'data')
-        print(os.path.exists(model_path))
         if not os.path.exists(model_path):
             data_utils.download_data_gdown(CKIPTAGGER_MODEL_PATH)
-
-        self.ws = WS(model_path)
-        self.pos = POS(model_path)
-        self.ner = NER(model_path)
+        if use_cuda:
+            disable_cuda=False
+        self.ws = WS(model_path,disable_cuda=disable_cuda)
+        self.pos = POS(model_path,disable_cuda=disable_cuda)
+        self.ner = NER(model_path,disable_cuda=disable_cuda)
 
     def pipe(self, texts, use_delim=False,delim_set={",", "。", ":", "?", "!", ";"}):
         word_sentence_list = self.get_word_seg(texts, sentence_segmentation=use_delim,
