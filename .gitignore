@@ -146,3 +146,9 @@ cython_debug/
 *.zip
 *.rar
 *.txt
+
+#ipython
+*.ipynb
+
+#model file
+model/

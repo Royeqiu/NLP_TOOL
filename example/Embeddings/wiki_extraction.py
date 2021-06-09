@@ -18,5 +18,3 @@ if __name__=='__main__':
             concated_str = converter.convert(' '.join(text) + '\n')
             print(ckip_util.get_word_seg(concated_str))
             output.write(concated_str)
-            if index > 10:
-                break
