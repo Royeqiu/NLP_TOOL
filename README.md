@@ -14,12 +14,12 @@ The tool is a toolkit based on several public and popular NLP tools for solving 
 * Simple Mandrain
 * English
 
-The nlp tools include Spacy, ckiptagger, Transformers, Hanlp, jieba.
-Spacy: https://spacy.io/
-Transformers: https://huggingface.co/transformers/
-ckiptagger: https://github.com/ckiplab/ckiptagger
-Hanlp: https://hanlp.com/
-jieba: https://github.com/fxsjy/jieba
+The nlp tools include:
+* Spacy: https://spacy.io/
+* Transformers: https://huggingface.co/transformers/
+* ckiptagger: https://github.com/ckiplab/ckiptagger
+* Hanlp: https://hanlp.com/
+* jieba: https://github.com/fxsjy/jieba
 
 Requirements
 ------------
