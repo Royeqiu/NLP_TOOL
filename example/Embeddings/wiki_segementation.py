@@ -4,7 +4,7 @@ from src.ckiptagger_util import Ckiptagger_Util
 
 print('load_ckiptegger')
 wiki_path = './example/Embeddings/wiki_texts.txt'
-write_path = './example/Embeddings/wiki_phrase_texts.txt'
+write_path = './example_data/wiki_phrase_texts.txt'
 ckiptagger = Ckiptagger_Util(use_cuda=True)
 print('load_wiki_article')
 file = open(wiki_path,'r',encoding='utf-8')
