@@ -6,3 +6,5 @@ class HANLP_CONST():
 
 class GENSIM_CONST():
     GRAM_TYPE_FLAG_DICT = {0:'uni',1:'bi',2:'tri',3:'quad',4:'pent'}
+    PHRASE_TASK = 'phrase'
+    W2V_TASK = 'w2v'

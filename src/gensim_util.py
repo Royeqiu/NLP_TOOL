@@ -2,6 +2,7 @@ from gensim.models.phrases import Phrases
 import os
 import json
 from NLP_Tool_Constant import GENSIM_CONST
+from gensim.models import Word2Vec
 
 class Phrase_Model():
 
@@ -49,9 +50,11 @@ class Phrase_Model():
 
 class Gensim_Util():
 
-    def __init__(self,model_path=None,model_name='phrase_model'):
-        self.phrase_model = Phrase_Model(model_path,model_name)
-
+    def __init__(self,task_type,model_path=None,model_name='phrase_model'):
+        if task_type == GENSIM_CONST.PHRASE_TASK:
+            self.phrase_model = Phrase_Model(model_path,model_name)
+        if task_type == GENSIM_CONST.W2V_TASK:
+            pass
     def build_phrase_model(self,sentences,min_count = 5, threshold = 10, gram_limit = 3):
         self.phrase_model.train_model(sentences,min_count=min_count,threshold=threshold,gram_limit=gram_limit)
 
@@ -70,3 +73,14 @@ class Gensim_Util():
             os.mkdir(target_path)
         self.phrase_model.save(model_path,model_name)
 
+    def load_wiki_articles(self,example_file_path,articles_count=-1):
+        file = open(example_file_path,'r',encoding='utf-8')
+        docs = []
+        for index,data in enumerate(file):
+            if index==articles_count:
+                break
+            if index % 1000 == 0:
+                print(index)
+            sentences = json.loads(data.strip())
+            docs.append(sentences)
+        return docs
