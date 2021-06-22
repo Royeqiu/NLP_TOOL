@@ -204,8 +204,8 @@ class NLP_Tool:
     def set_tokenizer(self, Tokenizer, vocab):
         self.nlp.tokenizer = Tokenizer(vocab)
 
-    def get_avg_vector(self, vectors):
-        avg_vector = np.zeros((300), dtype='f')
+    def get_avg_vector(self, vectors,vector_size=300):
+        avg_vector = np.zeros((vector_size), dtype='f')
         for vector in vectors:
             avg_vector += vector
         if len(vectors) == 0:

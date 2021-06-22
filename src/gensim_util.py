@@ -2,8 +2,7 @@ from gensim.models.phrases import Phrases
 import os
 import json
 from NLP_Tool_Constant import GENSIM_CONST
-from gensim.models import Word2Vec
-
+from gensim.models import FastText,Word2Vec
 class Phrase_Model():
 
     def __init__(self,model_path=None,model_name='phrase_model'):
@@ -36,6 +35,14 @@ class Phrase_Model():
     def get_phrase(self,sentences,gram_flag):
         return [phrase_sentence for phrase_sentence in self.hierarchical_model[gram_flag][sentences]]
 
+    def inference(self,sentences):
+        gram_sentences = dict()
+        gram_sentences[0] = sentences
+        for gram_count in range(1,self.gram_limit):
+            gram_flag = GENSIM_CONST.GRAM_TYPE_FLAG_DICT[gram_count]
+            gram_sentences[gram_count]= self.get_phrase(gram_sentences[gram_count-1],gram_flag)
+        return gram_sentences
+
     def save(self,model_path,model_name='phrase_model'):
         for gram_count in range(1,self.gram_limit):
             gram_flag = GENSIM_CONST.GRAM_TYPE_FLAG_DICT[gram_count]
@@ -48,24 +55,46 @@ class Phrase_Model():
             cfg.write(json.dumps(self.config))
             cfg.close()
 
+class Embedding_Model():
+
+    def __init__(self,model_path = None,model_name = 'embedding_model',model_type = GENSIM_CONST.W2V_FT_MODEL):
+
+        if model_type == GENSIM_CONST.W2V_FT_MODEL:
+            self.model_class = FastText
+        else:
+            self.model_class = Word2Vec
+
+        if model_path is not None:
+            self.embedding_model = self.model_class.load(os.path.join(model_path, model_name))
+        else:
+            self.embedding_model = None
+
+    def train_model(self,sentences,min_count = 5):
+        self.embedding_model = self.model_class(sentences, min_count = min_count)
+
+    def inference(self,tokens):
+        vecs = [self.embedding_model.wv[word] for word in tokens if word in self.embedding_model.wv]
+        return vecs
+
+    def save(self,model_path,model_name='embedding_model'):
+        self.embedding_model.save(os.path.join(model_path,model_name,'w2v.mod'))
+
 class Gensim_Util():
 
-    def __init__(self,task_type,model_path=None,model_name='phrase_model'):
+    def __init__(self,task_type,model_path=None,model_name='phrase_model',model_type = None):
+        self.task_type = task_type
         if task_type == GENSIM_CONST.PHRASE_TASK:
             self.phrase_model = Phrase_Model(model_path,model_name)
         if task_type == GENSIM_CONST.W2V_TASK:
-            pass
+            self.w2v_model = Embedding_Model(model_path,model_name,model_type)
     def build_phrase_model(self,sentences,min_count = 5, threshold = 10, gram_limit = 3):
         self.phrase_model.train_model(sentences,min_count=min_count,threshold=threshold,gram_limit=gram_limit)
 
-    def inference(self, sentences, gram_limit=3):
-        gram_sentences = dict()
-        gram_sentences[0] = sentences
-        for gram_count in range(1,gram_limit):
-            gram_flag = GENSIM_CONST.GRAM_TYPE_FLAG_DICT[gram_count]
-            gram_sentences[gram_count]= self.phrase_model.get_phrase(gram_sentences[gram_count-1],gram_flag)
-
-        return gram_sentences
+    def inference(self, sentences):
+        if self.task_type == GENSIM_CONST.PHRASE_TASK:
+            return self.phrase_model.inference(sentences)
+        else:
+            return self.w2v_model.inference(sentences)
 
     def save_model(self,model_path,model_name='phrase_model'):
         target_path = os.path.join(model_path,model_name)

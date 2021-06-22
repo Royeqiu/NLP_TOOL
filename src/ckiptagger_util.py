@@ -1,6 +1,5 @@
 from ckip_transformers.nlp import CkipWordSegmenter, CkipPosTagger, CkipNerChunker
 import os
-from NLP_Tool_Constant import CKIPTAGGER_MODEL_PATH
 class Ckiptagger_Util():
     def __init__(self,sentence_segmentation=False,use_cuda = False):
         if use_cuda:
