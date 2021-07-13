@@ -11,3 +11,16 @@ class GENSIM_CONST():
     W2V_FT_MODEL = 'FT'
     W2V_SG_MODEL = 'SG'
     W2V_CB_MODEL = 'CB'
+
+class NLP_EVALUATION_CONST():
+    ACCURACY = 'accuracy'
+    RECALL = 'recall'
+    F_SCORE = 'f_score'
+    BLEU = 'bleu'
+    NIST = 'nist'
+    GLEU = 'gleu'
+    MICRO_MODE = 'micro'
+    MACRO_MODE = 'macro'
+    AVERAGE_MODE = 'average'
+    WER = 'wer'
+    CONFUSION_MATRIX = 'confusion matrix'

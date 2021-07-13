@@ -204,14 +204,19 @@ class NLP_Tool:
     def set_tokenizer(self, Tokenizer, vocab):
         self.nlp.tokenizer = Tokenizer(vocab)
 
-    def get_avg_vector(self, vectors,vector_size=300):
-        avg_vector = np.zeros((vector_size), dtype='f')
-        for vector in vectors:
-            avg_vector += vector
-        if len(vectors) == 0:
-            return avg_vector
+    def get_avg_vector(self, vectors, vector_size=300, weights = None):
+        if weights is not None:
+            assert len(weights) == len(vectors), 'The weight size doesnt fit vector size'
         else:
-            return avg_vector / len(vectors)
+            weights = np.ones(len(vectors))
+        normalized_weight = np.array(weights) / sum([weight * weight for weight in weights])
+        avg_vector = np.zeros((vector_size), dtype='f')
+        print('@@', normalized_weight , '##')
+        for vector, weight in zip(vectors, normalized_weight):
+            print(vector)
+            print(weight)
+            avg_vector += vector * weight
+        return avg_vector
 
     def get_index(self, term, sentence, skip_space=True):
 

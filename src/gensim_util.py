@@ -79,6 +79,17 @@ class Embedding_Model():
     def save(self,model_path,model_name='embedding_model'):
         self.embedding_model.save(os.path.join(model_path,model_name,'w2v.mod'))
 
+    def contains(self, word):
+        if word in self.embedding_model.wv:
+            return True
+        else:
+            return False
+
+    def get_similar_phrase_by_vec(self,vec,top_k = 10):
+
+        return self.embedding_model.wv.similar_by_vector(vec,top_k)
+
+
 class Gensim_Util():
 
     def __init__(self,task_type,model_path=None,model_name='phrase_model',model_type = None):
